@@ -1,23 +1,16 @@
 import express from "express";
 import http from "node:http";
-import path from "node:path";
 import { Server as WSServer } from "socket.io";
 import cors from "cors";
 import { randomUUID } from "node:crypto";
-import { configDotenv } from 'dotenv'
-configDotenv();
-
-
-const PORT = 8000;
-const CLIENT_URL = "http://localhost:3000";
-const __dirname = path.dirname(import.meta.url);
+import { config } from "./config.js";
 
 const app = express();
 const server = new http.Server(app);
-const io = new WSServer(server, { cors: { origin: CLIENT_URL } });
+const io = new WSServer(server, { cors: { origin: config.CLIENT_URL } });
 
 app.use(express.json());
-app.use(cors({ origin: CLIENT_URL }));
+app.use(cors({ origin: config.CLIENT_URL }));
 
 app.get("/", (req, res) => {
     res.json({ welcome: "app works" });
@@ -89,6 +82,6 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`);
+server.listen(config.PORT, () => {
+    console.log(`listening on port ${config.PORT}`);
 });
