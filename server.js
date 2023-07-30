@@ -5,12 +5,16 @@ import cors from "cors";
 import { randomUUID } from "node:crypto";
 import { config } from "./config.js";
 
+const allowedURLs = [
+    "http://localhost:3000", "http://localhost:3001", config.CLIENT_URL    
+]
+
 const app = express();
 const server = new http.Server(app);
-const io = new WSServer(server, { cors: { origin: config.CLIENT_URL } });
+const io = new WSServer(server, { cors: { origin: allowedURLs } });
 
 app.use(express.json());
-app.use(cors({ origin: config.CLIENT_URL }));
+app.use(cors({ origin: allowedURLs }));
 
 app.get("/", (req, res) => {
     res.json({ welcome: "app works" });
