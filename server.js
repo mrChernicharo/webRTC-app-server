@@ -1,27 +1,27 @@
 import express from "express";
-// import http from "node:http";
-import https from "node:https";
+import http from "node:http";
+// import https from "node:https";
 import { Server as WSServer } from "socket.io";
 import cors from "cors";
 import { randomUUID } from "node:crypto";
 import { config, httpsServerConfig } from "./config/config.js";
 
-const allowedURLs = [
-    "http://localhost:3000",
-    "https://localhost:3000",
-    "http://localhost:3001",
-    // "https://localhost:8000",
-    "https://web-rtc-app-client.vercel.app",
-    "https://webrtc-app-server.onrender.com/"
-];
+// const allowedURLs = [
+//     "http://localhost:3000",
+//     "https://localhost:3000",
+//     "http://localhost:3001",
+//     // "https://localhost:8000",
+//     "https://web-rtc-app-client.vercel.app",
+//     "https://webrtc-app-server.onrender.com/"
+// ];
 
 const app = express();
-// const server = new http.Server(app);
-const server = new https.Server(httpsServerConfig ,app);
-const io = new WSServer(server, { cors: { origin: allowedURLs } });
+const server = new http.Server(app);
+// const server = new https.Server(httpsServerConfig ,app);
+const io = new WSServer(server, { cors: { origin: '*' } });
 
 app.use(express.json());
-app.use(cors({ origin: allowedURLs }));
+app.use(cors({ origin: '*' }));
 
 app.get("/", (req, res) => {
     res.json({ welcome: "app works" });
