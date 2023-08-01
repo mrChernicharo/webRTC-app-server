@@ -18,10 +18,10 @@ import { config, httpsServerConfig } from "./config/config.js";
 const app = express();
 const server = new http.Server(app);
 // const server = new https.Server(httpsServerConfig ,app);
-const io = new WSServer(server, { cors: { origin: '*' } });
+const io = new WSServer(server, { cors: { origin: "*" } });
 
 app.use(express.json());
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: "*" }));
 
 app.get("/", (req, res) => {
     res.json({ welcome: "app works" });
@@ -61,6 +61,38 @@ io.on("connection", (socket) => {
         (users[message.roomId] || []).forEach((user) => {
             if (user !== socket.id) {
                 io.to(user).emit("receive-text-message", message);
+            }
+        });
+    });
+
+    socket.on("set-video-on", (roomID, userId) => {
+        (users[roomID] || []).forEach((user) => {
+            if (user !== socket.id) {
+                io.to(user).emit("video-on", userId);
+            }
+        });
+    });
+
+    socket.on("set-video-off", (roomID, userId) => {
+        (users[roomID] || []).forEach((user) => {
+            if (user !== socket.id) {
+                io.to(user).emit("video-off", userId);
+            }
+        });
+    });
+
+    socket.on("set-audio-on", (roomID, userId) => {
+        (users[roomID] || []).forEach((user) => {
+            if (user !== socket.id) {
+                io.to(user).emit("audio-on", userId);
+            }
+        });
+    });
+
+    socket.on("set-audio-off", (roomID, userId) => {
+        (users[roomID] || []).forEach((user) => {
+            if (user !== socket.id) {
+                io.to(user).emit("audio-off", userId);
             }
         });
     });
